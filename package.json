@@ -1,0 +1,11 @@
+{
+  "name": "SQS_test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.1192.0",
+    "dotenv": "^16.0.1",
+    "uuid": "^8.3.2"
+  }
+}
