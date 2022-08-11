@@ -23,8 +23,9 @@ const createParams = (queueName) => {
 	return {
 		QueueName: queueName,
 		Attributes: {
-			//DelaySeconds: 10, // Unused in FIFO queues
+			DelaySeconds: '10', // Unused in FIFO queues
 			MessageRetentionPeriod: '86400',
+			FifoQueue: String(queueName?.includes('.fifo')),
 		}
 	}
 };

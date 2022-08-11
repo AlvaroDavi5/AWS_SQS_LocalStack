@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const { createSqsQueue } = require('../src/sqs.js');
 
-const QUEUE_NAME = process.env.QUEUE_NAME || 'BOOKS_QUEUE';
+const QUEUE_NAME = process.env.QUEUE_NAME || 'BOOKS_QUEUE.fifo';
 
 const message = {
 	title: 'Clean Code',
