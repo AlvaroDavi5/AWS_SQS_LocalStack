@@ -1,15 +1,17 @@
 const dotenv = require('dotenv');
 const { sendMessage } = require('../src/sqs.js');
 
-const QUEUE_URL = process.env.QUEUE_URL || 'http://localhost:4566/000000000000/BOOKS_QUEUE.fifo'; 
+const queueFullUrl = process.env.QUEUE_FULL_URL || 'http://localhost:4566/000000000000/';
+const queueName = process.env.QUEUE_NAME || 'DEFAULT_QUEUE.fifo';
 
 const message = {
 	title: 'Clean Architecture',
 	author: 'Robert Martin',
-}
+};
 
 sendMessage(
-	QUEUE_URL,
-	JSON.stringify(message),
+	`${queueFullUrl}${queueName}`,
+	'The Developer',
+	'A.D.S.A.',
+	message,
 );
-

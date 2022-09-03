@@ -1,12 +1,6 @@
 const dotenv = require('dotenv');
-const { createSqsQueue } = require('../src/sqs.js');
+const { createQueue } = require('../src/sqs.js');
 
-const QUEUE_NAME = process.env.QUEUE_NAME || 'BOOKS_QUEUE.fifo';
+const queueName = process.env.QUEUE_NAME || 'DEFAULT_QUEUE.fifo';
 
-const message = {
-	title: 'Clean Code',
-	author: 'Robert Martin',
-}
-
-createSqsQueue(QUEUE_NAME);
-
+createQueue(queueName);

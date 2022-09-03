@@ -5,9 +5,10 @@
 	"license": "MIT",
 	"scripts": {
 		"create-queue": "node ./scripts/create.js",
+		"delete-queue": "node ./scripts/delete.js",
+		"list-queues": "node ./scripts/list.js",
 		"send-message": "node ./scripts/send.js",
-		"receive-message": "node ./scripts/receive.js",
-		"list-queues": "node ./scripts/list.js"
+		"receive-message": "node ./scripts/receive.js"
 	},
 	"dependencies": {
 		"aws-sdk": "^2.1192.0",

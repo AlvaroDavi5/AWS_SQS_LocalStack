@@ -1,59 +1,80 @@
 const { SQS, listParams, createParams, msgParams, receiveParam } = require('./util.js');
 
 module.exports = {
-	listSQS: async () => {
-		SQS.listQueues(listParams, function(err, data) {
+	listQueues: async () => {
+		SQS.listQueues(listParams, function (err, data) {
 			if (err) {
-				console.log("List Error", err);
+				console.log("List Error:", err);
 			} else {
-				console.log("List Success", data?.QueueUrls);
+				const queueUrls = data?.QueueUrls || [];
+				console.log("Queues:");
+				console.table(queueUrls);
 			}
 		});
 	},
 
-	createSqsQueue: async (queueName) => {
-		SQS.createQueue(createParams(queueName), function(err, data) {
+	createQueue: async (queueName) => {
+		SQS.createQueue(createParams(queueName), function (err, data) {
 			if (err) {
 				console.log("Creation Error", err);
 			} else {
-				console.log("Creation Success", data?.QueueUrl);
+				const queueUrl = [data?.QueueUrl] || [];
+				console.log("Created Successfully:");
+				console.table(queueUrl);
 			}
 		});
 	},
 
-	sendMessage: async (queueUrl, message) => {
-		SQS.sendMessage(msgParams(queueUrl, message), function(err, data) {
+	deleteQueue: async (queueUrl) => {
+		SQS.deleteQueue({ QueueUrl: queueUrl }, function (err, data) {
+			if (err) {
+				console.log("Error to Delete", err);
+			} else {
+				console.log("Deleted Successfully:");
+				console.table({ queueUrl, requestId: data?.ResponseMetadata?.RequestId });
+			}
+		});
+	},
+
+	sendMessage: async (queueUrl, title, author, message) => {
+		SQS.sendMessage(msgParams(queueUrl, message, title, author), function (err, data) {
 			if (err) {
 				console.log("Send Error", err);
 			} else {
-				console.log("Send Success", data?.MessageId);
+				console.log("Send Successfully:");
+				console.table({ messageId: data?.MessageId });
 			}
 		});
 	},
 
 	getMessage: async (queueUrl) => {
-		SQS.receiveMessage(receiveParam(queueUrl), function(err, data) {
+		SQS.receiveMessage(receiveParam(queueUrl), function (err, data) {
 			if (err) {
 				console.log("Receive Error", err);
 			}
 			else if (data?.Messages) {
-				console.log('-----Message------');
-				console.log(data?.Messages);
-				console.log('-----Message End------');
-				var deleteParams = {
-					QueueUrl: queueUrl,
-					ReceiptHandle: data.Messages[0].ReceiptHandle
-				};
-				SQS.deleteMessage(deleteParams, function(err, data) {
-					if (err) {
-						console.log("Delete Error", err);
-					}
-					else {
-						console.log("Message Deleted", data);
-					}
-				});
+				console.log(`Messages (${Array(data?.Messages).length}):`);
+
+				for (const message of data?.Messages) {
+					console.log('----- Message -----');
+					console.log(message);
+					console.log('----- Message End -----');
+
+					const deleteParams = {
+						QueueUrl: queueUrl,
+						ReceiptHandle: message.ReceiptHandle
+					};
+					SQS.deleteMessage(deleteParams, function (err, data) {
+						if (err) {
+							console.log("Error to Delete Message:", err);
+						}
+						else {
+							console.log("Message Deleted:");
+							console.table({ queueUrl, requestId: data?.ResponseMetadata?.RequestId });
+						}
+					});
+				}
 			}
 		});
 	},
-}
-
+};

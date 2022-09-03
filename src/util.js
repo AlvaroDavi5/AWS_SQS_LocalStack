@@ -4,15 +4,22 @@ const uuid = require('uuid');
 // Load the AWS SDK for Node.js
 const AWS = require('aws-sdk');
 
+
+const queueUrl = process.env.QUEUE_URL || 'http://localhost:4566/';
+const awsRegion = process.env.AWS_REGION || 'us-east-1';
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID || 'mock';
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY_ID || 'mock';
+const messageGroupId = process.env.AWS_MESSAGE_GROUP_ID || 'Group1';
+
 // Set the region 
-AWS.config.update({region: 'us-east-1'});
+AWS.config.update({ region: awsRegion });
 
 const config = {
-	endpoint: new AWS.Endpoint('http://localhost:4566'),
-	accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'mock',
-	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_ID || 'mock',
-	region: process.env.AWS_REGION || 'us-east-1'
-}
+	endpoint: new AWS.Endpoint(queueUrl),
+	accessKeyId: accessKeyId,
+	secretAccessKey: secretAccessKey,
+	region: awsRegion,
+};
 
 // Create an SQS service object
 const SQS = new AWS.SQS(config);
@@ -30,21 +37,27 @@ const createParams = (queueName) => {
 	}
 };
 
-const msgParams = (queueUrl, message) => {
+const msgParams = (queueUrl, message, title, author) => {
+
+	let messageBody = String(message);
+	if (typeof (message) === 'object') {
+		messageBody = JSON.stringify(message);
+	}
+
 	return {
 		MessageAttributes: {
 			title: {
 				DataType: "String",
-				StringValue: "The Coder"
+				StringValue: String(title)
 			},
 			author: {
 				DataType: "String",
-				StringValue: "A.D.S.A."
+				StringValue: String(author)
 			},
 		},
-		MessageBody: message,
+		MessageBody: messageBody,
 		MessageDeduplicationId: uuid.v4(), // Required for FIFO queues
-		MessageGroupId: process.env.AWS_MESSAGE_GROUP_ID || 'Group1', // Required for FIFO queues
+		MessageGroupId: messageGroupId, // Required for FIFO queues
 		QueueUrl: queueUrl,
 	}
 };
@@ -71,5 +84,4 @@ module.exports = {
 	createParams,
 	msgParams,
 	receiveParam,
-}
-
+};

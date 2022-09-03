@@ -1,4 +1,3 @@
-const { listSQS } = require('../src/sqs.js');
+const { listQueues } = require('../src/sqs.js');
 
-listSQS();
-
+listQueues();
