@@ -18,4 +18,3 @@ awslocal sqs delete-message --endpoint-url=http://localhost:4566 --queue-url=htt
 
 # delete SQS queue
 awslocal sqs delete-queue --queue-url=http://localhost:4566/000000000000/test_queue.fifo
-
