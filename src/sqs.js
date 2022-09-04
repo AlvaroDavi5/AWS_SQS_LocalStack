@@ -5,7 +5,8 @@ module.exports = {
 		SQS.listQueues(listParams, function (err, data) {
 			if (err) {
 				console.log("List Error:", err);
-			} else {
+			}
+			else {
 				const queueUrls = data?.QueueUrls || [];
 				console.log("Queues:");
 				console.table(queueUrls);
@@ -17,10 +18,11 @@ module.exports = {
 		SQS.createQueue(createParams(queueName), function (err, data) {
 			if (err) {
 				console.log("Creation Error", err);
-			} else {
-				const queueUrl = [data?.QueueUrl] || [];
+			}
+			else {
+				const queueUrl = data?.QueueUrl;
 				console.log("Created Successfully:");
-				console.table(queueUrl);
+				console.table({ queueUrl });
 			}
 		});
 	},
@@ -29,7 +31,8 @@ module.exports = {
 		SQS.deleteQueue({ QueueUrl: queueUrl }, function (err, data) {
 			if (err) {
 				console.log("Error to Delete", err);
-			} else {
+			}
+			else {
 				console.log("Deleted Successfully:");
 				console.table({ queueUrl, requestId: data?.ResponseMetadata?.RequestId });
 			}
@@ -40,7 +43,8 @@ module.exports = {
 		SQS.sendMessage(msgParams(queueUrl, message, title, author), function (err, data) {
 			if (err) {
 				console.log("Send Error", err);
-			} else {
+			}
+			else {
 				console.log("Send Successfully:");
 				console.table({ messageId: data?.MessageId });
 			}
