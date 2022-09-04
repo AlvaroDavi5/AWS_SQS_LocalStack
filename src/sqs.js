@@ -17,7 +17,7 @@ module.exports = {
 	createQueue: async (queueName) => {
 		SQS.createQueue(createParams(queueName), function (err, data) {
 			if (err) {
-				console.log("Creation Error", err);
+				console.log("Creation Error:", err);
 			}
 			else {
 				const queueUrl = data?.QueueUrl;
@@ -30,7 +30,7 @@ module.exports = {
 	deleteQueue: async (queueUrl) => {
 		SQS.deleteQueue({ QueueUrl: queueUrl }, function (err, data) {
 			if (err) {
-				console.log("Error to Delete", err);
+				console.log("Error to Delete:", err);
 			}
 			else {
 				console.log("Deleted Successfully:");

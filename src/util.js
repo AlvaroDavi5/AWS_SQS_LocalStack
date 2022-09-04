@@ -15,7 +15,7 @@ const messageGroupId = process.env.AWS_MESSAGE_GROUP_ID || 'Group1';
 AWS.config.update({ region: awsRegion });
 
 const config = {
-	endpoint: new AWS.Endpoint(queueUrl),
+	endpoint: new AWS.Endpoint(queueUrl), // https://sns.us-east-1.amazonaws.com
 	accessKeyId: accessKeyId,
 	secretAccessKey: secretAccessKey,
 	region: awsRegion,
@@ -34,7 +34,7 @@ const createParams = (queueName) => {
 			MessageRetentionPeriod: '86400',
 			FifoQueue: String(queueName?.includes('.fifo')),
 		}
-	}
+	};
 };
 
 const msgParams = (queueUrl, message, title, author) => {
@@ -59,7 +59,7 @@ const msgParams = (queueUrl, message, title, author) => {
 		MessageDeduplicationId: uuid.v4(), // Required for FIFO queues
 		MessageGroupId: messageGroupId, // Required for FIFO queues
 		QueueUrl: queueUrl,
-	}
+	};
 };
 
 const receiveParam = (queueUrl) => {
@@ -74,7 +74,7 @@ const receiveParam = (queueUrl) => {
 		QueueUrl: queueUrl,
 		VisibilityTimeout: 20,
 		WaitTimeSeconds: 0,
-	}
+	};
 };
 
 
