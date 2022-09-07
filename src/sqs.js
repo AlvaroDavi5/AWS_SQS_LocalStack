@@ -4,7 +4,7 @@ module.exports = {
 	listQueues: async () => {
 		SQS.listQueues(listParams, function (err, data) {
 			if (err) {
-				console.log("List Error:", err);
+				console.error("List Error:", err);
 			}
 			else {
 				const queueUrls = data?.QueueUrls || [];
@@ -17,7 +17,7 @@ module.exports = {
 	createQueue: async (queueName) => {
 		SQS.createQueue(createParams(queueName), function (err, data) {
 			if (err) {
-				console.log("Creation Error:", err);
+				console.error("Creation Error:", err);
 			}
 			else {
 				const queueUrl = data?.QueueUrl;
@@ -30,7 +30,7 @@ module.exports = {
 	deleteQueue: async (queueUrl) => {
 		SQS.deleteQueue({ QueueUrl: queueUrl }, function (err, data) {
 			if (err) {
-				console.log("Error to Delete:", err);
+				console.error("Error to Delete:", err);
 			}
 			else {
 				console.log("Deleted Successfully:");
@@ -42,7 +42,7 @@ module.exports = {
 	sendMessage: async (queueUrl, title, author, message) => {
 		SQS.sendMessage(msgParams(queueUrl, message, title, author), function (err, data) {
 			if (err) {
-				console.log("Send Error", err);
+				console.error("Send Error", err);
 			}
 			else {
 				console.log("Send Successfully:");
@@ -54,7 +54,7 @@ module.exports = {
 	getMessage: async (queueUrl) => {
 		SQS.receiveMessage(receiveParam(queueUrl), function (err, data) {
 			if (err) {
-				console.log("Receive Error", err);
+				console.error("Receive Error", err);
 			}
 			else if (data?.Messages) {
 				console.log(`Messages (${Array(data?.Messages).length}):`);
