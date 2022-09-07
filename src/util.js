@@ -11,11 +11,11 @@ const accessKeyId = process.env.AWS_ACCESS_KEY_ID || 'mock';
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY_ID || 'mock';
 const messageGroupId = process.env.AWS_MESSAGE_GROUP_ID || 'Group1';
 
-// Set the region 
+// Set the region
 AWS.config.update({ region: awsRegion });
 
 const config = {
-	endpoint: new AWS.Endpoint(queueUrl), // https://sns.us-east-1.amazonaws.com
+	endpoint: new AWS.Endpoint(queueUrl), // https://sqs.us-east-1.amazonaws.com
 	accessKeyId: accessKeyId,
 	secretAccessKey: secretAccessKey,
 	region: awsRegion,
