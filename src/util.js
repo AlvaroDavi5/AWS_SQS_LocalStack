@@ -1,4 +1,5 @@
 const dotenv = require('dotenv');
+dotenv.config();
 const uuid = require('uuid');
 
 // Load the AWS SDK for Node.js
@@ -16,8 +17,8 @@ AWS.config.update({ region: awsRegion });
 
 const config = {
 	endpoint: new AWS.Endpoint(queueUrl), // https://sqs.us-east-1.amazonaws.com
-	accessKeyId: accessKeyId,
-	secretAccessKey: secretAccessKey,
+	accessKeyId,
+	secretAccessKey,
 	region: awsRegion,
 	apiVersion: 'latest',
 };
@@ -40,6 +41,12 @@ const createParams = (queueName) => {
 
 const msgParams = (queueUrl, message, title, author) => {
 
+	const extraParams = {};
+	if (queueUrl?.includes('.fifo')) {
+		extraParams.MessageDeduplicationId = uuid.v4(); // Required for FIFO queues
+		extraParams.MessageGroupId = messageGroupId; // Required for FIFO queues
+	}
+
 	let messageBody = String(message);
 	if (typeof (message) === 'object') {
 		messageBody = JSON.stringify(message);
@@ -57,8 +64,7 @@ const msgParams = (queueUrl, message, title, author) => {
 			},
 		},
 		MessageBody: messageBody,
-		MessageDeduplicationId: uuid.v4(), // Required for FIFO queues
-		MessageGroupId: messageGroupId, // Required for FIFO queues
+		...extraParams,
 		QueueUrl: queueUrl,
 	};
 };
